@@ -1,0 +1,12 @@
+[project]
+name = "mmcc"
+version = "0.1.0"
+description = "MatVerse Multi-Domain Coherence & Convergence Engine (vΩ)"
+authors = [{ name = "MMCC", email = "maintainers@example.com" }]
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
