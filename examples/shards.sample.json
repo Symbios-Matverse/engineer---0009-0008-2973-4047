@@ -1,0 +1,5 @@
+[
+  {"name": "americas", "psi": 0.91, "theta": 0.89, "cvar": 0.08, "pole": 0.82, "cog": 0.79},
+  {"name": "europe",   "psi": 0.93, "theta": 0.9,  "cvar": 0.07, "pole": 0.81, "cog": 0.8},
+  {"name": "asia",     "psi": 0.89, "theta": 0.91, "cvar": 0.06, "pole": 0.83, "cog": 0.78}
+]
