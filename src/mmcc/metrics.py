@@ -33,6 +33,25 @@ class OmegaInputs:
             cog=_clamp01(self.cog),
         )
 
+    def assert_valid(self) -> None:
+        """Garante que todos os campos sejam números finitos.
+
+        O método não altera valores, servindo apenas para sinalizar entradas
+        inválidas (por exemplo, strings ou ``nan``). O ajuste para a faixa
+        ``[0, 1]`` continua sendo responsabilidade de ``clamped``.
+        """
+        for field_name, value in (
+            ("psi", self.psi),
+            ("theta", self.theta),
+            ("cvar", self.cvar),
+            ("pole", self.pole),
+            ("cog", self.cog),
+        ):
+            if not isinstance(value, (int, float)):
+                raise TypeError(f"{field_name} deve ser numérico; recebido {type(value)!r}")
+            if value != value or value in (float("inf"), float("-inf")):
+                raise ValueError(f"{field_name} não pode ser infinito ou NaN")
+
 
 def _clamp01(value: float) -> float:
     return max(0.0, min(1.0, value))

@@ -18,3 +18,9 @@ def test_average_requires_values():
         pass
     else:
         raise AssertionError("Esperava ValueError para média vazia")
+
+
+def test_inputs_validation_blocks_nan():
+    bad_inputs = OmegaInputs(psi=float("nan"), theta=0.5, cvar=0.1)
+    with __import__("pytest").raises(ValueError):
+        bad_inputs.assert_valid()

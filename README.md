@@ -22,7 +22,8 @@ melhor.
 - `src/mmcc/metrics.py` – funções puras para cálculo de Ω e validação de
   parâmetros.
 - `src/mmcc/planetary.py` – agregador simples para a Camada 2 Planetária,
-  consolidando métricas de shards e expondo resumos.
+  consolidando métricas de shards e expondo resumos (inclui validação
+  numérica e normalização automática de entradas fora do intervalo).
 - `src/mmcc/__main__.py` – CLI mínima (`python -m mmcc --input shards.json`)
   que lê um JSON de shards e imprime o resumo global em stdout.
 - `examples/shards.sample.json` – exemplo de entrada para a CLI.
@@ -56,6 +57,13 @@ Saída esperada (valores variam conforme o arquivo):
   "cvar_mean": 0.07
 }
 ```
+
+**Validação**
+
+- Entradas numéricas são verificadas para evitar valores não finitos.
+- Valores fora da faixa `[0, 1]` são automaticamente limitados pela CLI.
+- O JSON de entrada deve ser uma lista de shards; arquivos vazios ou em
+  outro formato são rejeitados com uma mensagem clara.
 
 ## Testes
 

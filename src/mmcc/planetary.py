@@ -24,13 +24,15 @@ class ShardMetrics:
     cog: float = 0.0
 
     def as_inputs(self) -> OmegaInputs:
-        return OmegaInputs(
+        inputs = OmegaInputs(
             psi=self.psi,
             theta=self.theta,
             cvar=self.cvar,
             pole=self.pole,
             cog=self.cog,
         )
+        inputs.assert_valid()
+        return inputs.clamped()
 
     def omega(self) -> float:
         return compute_omega(self.as_inputs())
@@ -48,16 +50,17 @@ class PlanetaryLayer:
             raise ValueError("Nenhum shard registrado para sumarização")
 
         omega_values = [s.omega() for s in self.shards]
-        psi_values = [s.psi for s in self.shards]
-        theta_values = [s.theta for s in self.shards]
-        cvar_values = [s.cvar for s in self.shards]
+        inputs_list = [s.as_inputs() for s in self.shards]
+        psi_values = [i.psi for i in inputs_list]
+        theta_values = [i.theta for i in inputs_list]
+        cvar_values = [i.cvar for i in inputs_list]
 
         mean_inputs = OmegaInputs(
             psi=average(psi_values),
             theta=average(theta_values),
             cvar=average(cvar_values),
-            pole=average([s.pole for s in self.shards]),
-            cog=average([s.cog for s in self.shards]),
+            pole=average([i.pole for i in inputs_list]),
+            cog=average([i.cog for i in inputs_list]),
         )
 
         return {
@@ -73,6 +76,10 @@ class PlanetaryLayer:
     @classmethod
     def from_json(cls, path: Path | str) -> "PlanetaryLayer":
         data = json.loads(Path(path).read_text())
+        if not isinstance(data, list):
+            raise TypeError("Arquivo JSON deve conter uma lista de shards")
+        if not data:
+            raise ValueError("Lista de shards vazia no arquivo JSON")
         shards = [
             ShardMetrics(
                 name=item["name"],
